@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">GithubStarWatchdog</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="action_clear_cache">Clear Cache</string>
+    <string name="showStarChartFragmentLabel">Show Bar Chart Of Stars Fragment</string>
+    <string name="showUserListOfMonthFragmentLabel">Show List Of Users For Selected Month</string>
+    <string name="findRepoFragmentLabel">Find Repository Fragment</string>
+    <string name="show_chart">Show Chart</string>
+    <string name="userNameAutofill">JetBrains</string>
+    <string name="offline_mode">Offline Mode</string>
+    <string name="hide_not_loaded">Hide not loaded</string>
+    <string name="favourite_repository">Favourite Repository</string>
+    <string name="users_in_month">Users in month</string>
+    <string name="show">Show</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
 </resources>
