@@ -3,26 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/FindRepoFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.zxerrinor.githubstarwatchdog.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/FindRepoFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.FindRepoFragment"
+        android:label="@string/findRepoFragmentLabel"
+        tools:layout="@layout/fragment_find_repo">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_FindRepoFragment_to_ShowChartFragment"
+            app:destination="@id/ShowStarChartFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.zxerrinor.githubstarwatchdog.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/ShowStarChartFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.ShowStarChartFragment"
+        android:label="@string/showStarChartFragmentLabel"
+        tools:layout="@layout/fragment_show_star_chart">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_ShowStarChartFragment_to_ShowUserListOfMonth"
+            app:destination="@id/ShowUserListOfMonthFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/ShowUserListOfMonthFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.ShowUserListOfMonthFragment"
+        android:label="@string/showUserListOfMonthFragmentLabel"
+        tools:layout="@layout/fragment_show_user_list_of_month"></fragment>
 </navigation>
