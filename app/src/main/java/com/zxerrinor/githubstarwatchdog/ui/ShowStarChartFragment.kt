@@ -68,7 +68,7 @@ class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
             override fun onValueSelected(e: Entry?, h: Highlight?) {
                 if (e != null) {
                     CurrentValuesStore.month = e.x.toInt()
-                    findNavController().navigate(R.id.action_FindRepoFragment_to_ShowChartFragment)
+                    findNavController().navigate(R.id.action_ShowStarChartFragment_to_ShowUserListOfMonth)
                 }
             }
 
