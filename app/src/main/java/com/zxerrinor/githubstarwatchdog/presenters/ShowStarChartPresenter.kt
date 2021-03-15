@@ -1,5 +1,6 @@
 package com.zxerrinor.githubstarwatchdog.presenters
 
+import android.widget.Toast
 import com.github.mikephil.charting.data.BarEntry
 import com.zxerrinor.githubstarwatchdog.App
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
@@ -42,11 +43,12 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
             val repoUserName = CurrentValuesStore.repoUserName
             val repoName = CurrentValuesStore.repoName
             val months = mutableMapOf<Int, Int>()
-            val currentYear = LocalDateTime.now()
+            val currentTime = LocalDateTime.now()
             val startDate =
-                currentYear.minusMonths(11).minusDays(currentYear.dayOfMonth.toLong() - 1)
+                currentTime.minusMonths(11).minusDays(currentTime.dayOfMonth.toLong() - 1)
             val xAxisStart = startDate.monthValue
-            val usersOfMonths = loadFromDB(repoName, repoUserName, currentYear, startDate)
+            val usersOfMonths = loadFromDB(repoName, repoUserName, startDate)
+            showAndSave(usersOfMonths, repoName, repoUserName, xAxisStart)
             var breakNeeded = false
             if (isInternetAvailable() && !CurrentValuesStore.offlineMode) {
                 val repo =
@@ -83,7 +85,7 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                         if (!breakNeeded) {
 //                        val currentUserListOfMonth = usersOfMonths[date.month]
                             val key =
-                                if (date.year == currentYear.year) date.monthValue + 12 else date.monthValue
+                                if (date.year == currentTime.year) date.monthValue + 12 else date.monthValue
                             if (usersOfMonths[key] != null) usersOfMonths[key]!!.add(
                                 it.user.login
                             )
@@ -96,24 +98,29 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                     }
                     if (breakNeeded) break
                 }
+                showAndSave(usersOfMonths, repoName, repoUserName, xAxisStart)
+                CurrentValuesStore.activity.runOnUiThread {
+                    Toast.makeText(
+                        CurrentValuesStore.activity, "Chart data updated!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else CurrentValuesStore.activity.runOnUiThread {
+                Toast.makeText(
+                    CurrentValuesStore.activity, "Offline mode",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            CurrentValuesStore.months = usersOfMonths
-            viewState.setChartEntries(
-                usersOfMonths.map { BarEntry(it.key.toFloat(), it.value.size.toFloat()) },
-                "$repoUserName/$repoName",
-                xAxisStart
-            )
-            monthList = usersOfMonths.map {
-                (Month.values()[(it.key - 1) % 12].name.toLowerCase().capitalize() +
-                        if (it.key - 12 > 0) " (${currentYear.year})"
-                        else " (${currentYear.year - 1})") to it.key
-            }.toMap()
-            viewState.setMonthInputAdapter(monthList.map { it.key })
         }
     }
 
-    private fun loadFromDB(repoName: String, repoUserName: String, currentYear: LocalDateTime, startDate: LocalDateTime): MutableMap<Int, MutableList<String>> {
+    private fun loadFromDB(
+        repoName: String,
+        repoUserName: String,
+        startDate: LocalDateTime
+    ): MutableMap<Int, MutableList<String>> {
         val usersOfMonths = mutableMapOf<Int, MutableList<String>>()
+        val currentTime = LocalDateTime.now()
         GlobalScope.launch {
             val dbRepo =
                 App.db.repositoryDao().findByRepoNameAndRepoUserName(repoName, repoUserName)
@@ -124,7 +131,7 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                 val date = LocalDateTime.parse(it.starredAt.replace("Z", ""))
                 if (date >= startDate) {
                     val key =
-                        if (date.year == currentYear.year) date.monthValue + 12 else date.monthValue
+                        if (date.year == currentTime.year) date.monthValue + 12 else date.monthValue
                     if (usersOfMonths[key] != null) usersOfMonths[key]!!.add(
                         it.stargazerUsername
                     )
@@ -136,6 +143,27 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                 }
             }
         return usersOfMonths
+    }
+
+    fun showAndSave(
+        usersOfMonths: Map<Int, MutableList<String>>,
+        repoName: String,
+        repoUserName: String,
+        xAxisStart: Int
+    ) {
+        val currentTime = LocalDateTime.now()
+        CurrentValuesStore.months = usersOfMonths
+        viewState.setChartEntries(
+            usersOfMonths.map { BarEntry(it.key.toFloat(), it.value.size.toFloat()) },
+            "$repoUserName/$repoName",
+            xAxisStart
+        )
+        monthList = usersOfMonths.map {
+            (Month.values()[(it.key - 1) % 12].name.toLowerCase().capitalize() +
+                    if (it.key - 12 > 0) " (${currentTime.year})"
+                    else " (${currentTime.year - 1})") to it.key
+        }.toMap()
+        viewState.setMonthInputAdapter(monthList.map { it.key })
     }
 
     fun onShowMonthButtonClicked(monthInput: String) {
