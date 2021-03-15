@@ -46,7 +46,7 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
             val startDate =
                 currentYear.minusMonths(11).minusDays(currentYear.dayOfMonth.toLong() - 1)
             val xAxisStart = startDate.monthValue
-            val usersOfMonths = mutableMapOf<Int, MutableList<String>>()
+            val usersOfMonths = loadFromDB(repoName, repoUserName, currentYear, startDate)
             var breakNeeded = false
             if (isInternetAvailable() && !CurrentValuesStore.offlineMode) {
                 val repo =
@@ -96,28 +96,6 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                     }
                     if (breakNeeded) break
                 }
-            } else {
-                GlobalScope.launch {
-                    val dbRepo =
-                        App.db.repositoryDao().findByRepoNameAndRepoUserName(repoName, repoUserName)
-                    if (dbRepo != null) viewState.setIsFavouriteSwitchState(dbRepo.isFavourite)
-                }
-                App.db.starDao().findAllByRepoNameAndRepoUserName(repoName, repoUserName)
-                    .forEach {
-                        val date = LocalDateTime.parse(it.starredAt.replace("Z", ""))
-                        if (date >= startDate) {
-                            val key =
-                                if (date.year == currentYear.year) date.monthValue + 12 else date.monthValue
-                            if (usersOfMonths[key] != null) usersOfMonths[key]!!.add(
-                                it.stargazerUsername
-                            )
-                            else usersOfMonths[key] = mutableListOf(it.stargazerUsername)
-//                            val currentAmountOfStars = months[key]
-//                            months[key] =
-//                                if (currentAmountOfStars != null) currentAmountOfStars + 1
-//                                else 1
-                        }
-                    }
             }
             CurrentValuesStore.months = usersOfMonths
             viewState.setChartEntries(
@@ -132,6 +110,32 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
             }.toMap()
             viewState.setMonthInputAdapter(monthList.map { it.key })
         }
+    }
+
+    private fun loadFromDB(repoName: String, repoUserName: String, currentYear: LocalDateTime, startDate: LocalDateTime): MutableMap<Int, MutableList<String>> {
+        val usersOfMonths = mutableMapOf<Int, MutableList<String>>()
+        GlobalScope.launch {
+            val dbRepo =
+                App.db.repositoryDao().findByRepoNameAndRepoUserName(repoName, repoUserName)
+            if (dbRepo != null) viewState.setIsFavouriteSwitchState(dbRepo.isFavourite)
+        }
+        App.db.starDao().findAllByRepoNameAndRepoUserName(repoName, repoUserName)
+            .forEach {
+                val date = LocalDateTime.parse(it.starredAt.replace("Z", ""))
+                if (date >= startDate) {
+                    val key =
+                        if (date.year == currentYear.year) date.monthValue + 12 else date.monthValue
+                    if (usersOfMonths[key] != null) usersOfMonths[key]!!.add(
+                        it.stargazerUsername
+                    )
+                    else usersOfMonths[key] = mutableListOf(it.stargazerUsername)
+//                            val currentAmountOfStars = months[key]
+//                            months[key] =
+//                                if (currentAmountOfStars != null) currentAmountOfStars + 1
+//                                else 1
+                }
+            }
+        return usersOfMonths
     }
 
     fun onShowMonthButtonClicked(monthInput: String) {
