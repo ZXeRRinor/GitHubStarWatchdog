@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.R
@@ -35,6 +36,15 @@ class FindRepoFragment : MvpAppCompatFragment(), FindRepoView {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonLoad.setOnClickListener {
+            if(binding.repoInput.selectedItem == null) {
+                CurrentValuesStore.activity.runOnUiThread {
+                    Toast.makeText(
+                        CurrentValuesStore.activity, "Please, select repository for watching",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                return@setOnClickListener
+            }
             findRepoPresenter.onLoadButtonClicked(
                 binding.repoInput.selectedItem.toString()
             )
