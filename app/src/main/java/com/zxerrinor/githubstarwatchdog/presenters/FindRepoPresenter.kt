@@ -36,7 +36,10 @@ class FindRepoPresenter : MvpPresenter<FindRepoView>() {
         viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName))
     }
 
-    private fun getRepositoriesOfUser(repoUserName: String, forceUseDb: Boolean = false): List<String> {
+    private fun getRepositoriesOfUser(
+        repoUserName: String,
+        forceUseDb: Boolean = false
+    ): List<String> {
         if (CurrentValuesStore.repositoriesOfUser != null && CurrentValuesStore.repoUserName == repoUserName)
             return CurrentValuesStore.repositoriesOfUser!!
         CurrentValuesStore.repoUserName = repoUserName

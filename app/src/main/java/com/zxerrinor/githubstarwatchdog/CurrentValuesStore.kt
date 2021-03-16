@@ -9,6 +9,6 @@ object CurrentValuesStore {
     var month = 0
     var months = mapOf<Int, List<String>>()
     var repositoriesOfUser: List<String>? = null
-    const val gitHubAuthToken = ""
+    const val gitHubAuthToken = "5817ce9000eddf49a0e350daa12902271a8e91bf"
     var offlineMode = false
 }
