@@ -32,43 +32,53 @@ class FindRepoPresenter : MvpPresenter<FindRepoView>() {
     }
 
     fun onFindRepoButtonClicked(repoUserName: String) = GlobalScope.launch {
-        viewState.setRepoInputAdapter((
-                if (CurrentValuesStore.repositoriesOfUser != null && CurrentValuesStore.repoUserName == repoUserName)
-                    CurrentValuesStore.repositoriesOfUser!!
-                else {
-                    CurrentValuesStore.repoUserName = repoUserName
-                    val result = if (isInternetAvailable() && !offlineMode) {
-                        val repositories = mutableListOf<Repository>()
-                        var page = 0
-                        do {
-                            val gitHubUserRepositoriesResponse =
-                                App.gitHubApi.getRepositoriesOfUser(
-                                    repoUserName,
-                                    page,
-                                    100
-                                ).execute()
-                            page++
-                            val currentRepos =
-                                gitHubUserRepositoriesResponse.body() ?: return@launch
-                            repositories.addAll(currentRepos)
-                        } while (currentRepos.size == 100)
-                        saveRepositoriesToDb(repositories)
-                        repositories.map { it.name }
-                    } else if (hideNotLoaded)
-                        App.db.repositoryDao().findAllByRepoUserName(repoUserName).mapNotNull {
-                            if (App.db.starDao()
-                                    .countByRepoNameAndRepoUserName(
-                                        it.repoName,
-                                        it.repoUserName
-                                    ) > 0
-                            ) it.repoName else null
-                        }
-                    else
-                        App.db.repositoryDao().findAllByRepoUserName(repoUserName)
-                            .map { it.repoName }
-                    CurrentValuesStore.repositoriesOfUser = result
-                    result
-                }))
+        viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName, true))
+        viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName))
+    }
+
+    private fun getRepositoriesOfUser(repoUserName: String, forceUseDb: Boolean = false): List<String> {
+        if (CurrentValuesStore.repositoriesOfUser != null && CurrentValuesStore.repoUserName == repoUserName)
+            return CurrentValuesStore.repositoriesOfUser!!
+        CurrentValuesStore.repoUserName = repoUserName
+        val result = (if (isInternetAvailable() && !offlineMode && !forceUseDb)
+            loadRepositoriesOfUserFromGitHub(repoUserName)
+        else
+            loadRepositoriesOfUserFromDb(repoUserName)).sorted()
+        CurrentValuesStore.repositoriesOfUser = result
+        return result
+    }
+
+    private fun loadRepositoriesOfUserFromGitHub(repoUserName: String): List<String> {
+        val repositories = mutableListOf<Repository>()
+        var page = 0
+        do {
+            page++
+            val currentRepos =
+                App.gitHubApi.getRepositoriesOfUser(
+                    repoUserName,
+                    page,
+                    100
+                ).execute().body()
+                    ?: throw IllegalArgumentException("No repositories for this user found")
+            repositories.addAll(currentRepos)
+        } while (currentRepos.size == 100)
+        saveRepositoriesToDb(repositories)
+        return repositories.map { it.name }
+    }
+
+    private fun loadRepositoriesOfUserFromDb(repoUserName: String): List<String> {
+        return if (hideNotLoaded)
+            App.db.repositoryDao().findAllByRepoUserName(repoUserName).mapNotNull {
+                if (App.db.starDao()
+                        .countByRepoNameAndRepoUserName(
+                            it.repoName,
+                            it.repoUserName
+                        ) > 0
+                ) it.repoName else null
+            }
+        else
+            App.db.repositoryDao().findAllByRepoUserName(repoUserName)
+                .map { it.repoName }
     }
 
     private fun saveRepositoriesToDb(repositories: List<Repository>) = GlobalScope.launch {
