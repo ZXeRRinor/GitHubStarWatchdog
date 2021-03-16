@@ -23,6 +23,7 @@ import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import java.text.DecimalFormat
 import java.time.Month
+import java.util.*
 
 
 class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
@@ -35,7 +36,7 @@ class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowStarChartBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -106,11 +107,12 @@ class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
     }
 
     class CustomValueFormatter(
-        var decimalDigits: Int
+        decimalDigits: Int
     ) : ValueFormatter() {
-        protected var mFormat: DecimalFormat
+        private var mFormat: DecimalFormat
         override fun getFormattedValue(value: Float): String {
-            return Month.values()[(value.toInt() - 1) % 12].name.toLowerCase().capitalize()
+            return Month.values()[(value.toInt() - 1) % 12].name.toLowerCase(Locale.ROOT)
+                .capitalize(Locale.ROOT)
                 .substring(0, 3)
         }
 
