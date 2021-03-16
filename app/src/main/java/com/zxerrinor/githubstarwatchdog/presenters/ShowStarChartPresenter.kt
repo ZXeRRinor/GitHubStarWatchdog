@@ -6,6 +6,7 @@ import com.zxerrinor.githubstarwatchdog.App
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.database.Repository
 import com.zxerrinor.githubstarwatchdog.database.Star
+import com.zxerrinor.githubstarwatchdog.githubapi.Stargazer
 import com.zxerrinor.githubstarwatchdog.isInternetAvailable
 import com.zxerrinor.githubstarwatchdog.views.ShowStarChartView
 import kotlinx.coroutines.GlobalScope
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import moxy.MvpPresenter
 import java.time.LocalDateTime
 import java.time.Month
+import java.util.*
 import kotlin.math.ceil
 
 class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
@@ -42,83 +44,88 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
         GlobalScope.launch {
             val repoUserName = CurrentValuesStore.repoUserName
             val repoName = CurrentValuesStore.repoName
-            val months = mutableMapOf<Int, Int>()
             val currentTime = LocalDateTime.now()
             val startDate =
                 currentTime.minusMonths(11).minusDays(currentTime.dayOfMonth.toLong() - 1)
             val xAxisStart = startDate.monthValue
-            val usersOfMonths = loadFromDB(repoName, repoUserName, startDate)
-            showAndSave(usersOfMonths, repoName, repoUserName, xAxisStart)
-            var breakNeeded = false
+            var usersOfMonths = loadFromDb(repoName, repoUserName, startDate)
+            show(usersOfMonths, repoName, repoUserName, xAxisStart)
             if (isInternetAvailable() && !CurrentValuesStore.offlineMode) {
-                val repo =
-                    App.gitHubApi.getRepositoryInfo(repoUserName, repoName).execute()
-                val repository = repo.body() ?: return@launch
-                val dbRepo = App.db.repositoryDao().findById(repository.id)
-                if (dbRepo != null) viewState.setIsFavouriteSwitchState(dbRepo.isFavourite)
-                val stargazersCount = repository.stargazers_count
-                var page = ceil(stargazersCount / 100.0).toInt()
-                while (page >= 0) {
-                    val response =
-                        App.gitHubApi.getStargazers(repoUserName, repoName, page, 100)
-                            .execute()
-                    page--
-                    (response.body() ?: return@launch).forEach {
-                        GlobalScope.launch {
-                            if (App.db.starDao().findByStargazerUserNameAndStarredAt(
-                                    it.user.login,
-                                    it.starred_at
-                                ) == null
-                            )
-                                App.db.starDao().insertAll(
-                                    Star(
-                                        repoUserName,
-                                        repoName,
-                                        it.user.login,
-                                        it.starred_at
-                                    )
-                                )
-                        }
-                        val date = LocalDateTime.parse(it.starred_at.replace("Z", ""))
-//                    breakNeeded = date < (currentYear.minusYears(1))
-                        breakNeeded = date < startDate
-                        if (!breakNeeded) {
-//                        val currentUserListOfMonth = usersOfMonths[date.month]
-                            val key =
-                                if (date.year == currentTime.year) date.monthValue + 12 else date.monthValue
-                            if (usersOfMonths[key] != null) usersOfMonths[key]!!.add(
-                                it.user.login
-                            )
-                            else usersOfMonths[key] = mutableListOf(it.user.login)
-//                            val currentAmountOfStars = months[key]
-//                            months[key] =
-//                                if (currentAmountOfStars != null) currentAmountOfStars + 1
-//                                else 1
-                        }
-                    }
-                    if (breakNeeded) break
-                }
-                showAndSave(usersOfMonths, repoName, repoUserName, xAxisStart)
-                CurrentValuesStore.activity.runOnUiThread {
-                    Toast.makeText(
-                        CurrentValuesStore.activity, "Chart data updated!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } else CurrentValuesStore.activity.runOnUiThread {
-                Toast.makeText(
-                    CurrentValuesStore.activity, "Offline mode",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+                usersOfMonths = loadFromGitHubAndSaveToDb(repoUserName, repoName, startDate)
+                show(usersOfMonths, repoName, repoUserName, xAxisStart)
+                showUpdateStatusToast(true)
+            } else showUpdateStatusToast(false)
         }
     }
 
-    private fun loadFromDB(
+    private fun showUpdateStatusToast(updated: Boolean) {
+        val toastText = if (updated) "Chart data updated!" else "Offline mode"
+        CurrentValuesStore.activity.runOnUiThread {
+            Toast.makeText(
+                CurrentValuesStore.activity, toastText,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun loadFromGitHubAndSaveToDb(
+        repoUserName: String,
+        repoName: String,
+        startDate: LocalDateTime
+    ): Map<Int, MutableList<String>> {
+        val repository =
+            App.gitHubApi.getRepositoryInfo(repoUserName, repoName).execute().body()
+                ?: throw IllegalArgumentException("Not found repository with such name")
+        val dbRepo = App.db.repositoryDao().findById(repository.id)
+        if (dbRepo != null) viewState.setIsFavouriteSwitchState(dbRepo.isFavourite)
+        var page = ceil(repository.stargazers_count / 100.0).toInt()
+        val usersOfMonths = mutableMapOf<Int, MutableList<String>>()
+        var breakNeeded = false
+        while (page >= 0 && !breakNeeded) {
+            val response =
+                App.gitHubApi
+                    .getStargazers(repoUserName, repoName, page, 100).execute()
+            page--
+            (response.body()
+                ?: throw IllegalArgumentException("not found stargazers for this repository")).forEach {
+                saveToDb(repoUserName, repoName, it)
+                val date = LocalDateTime.parse(it.starred_at.replace("Z", ""))
+                if (date >= startDate) {
+                    val key =
+                        if (date.year == LocalDateTime.now().year) date.monthValue + 12 else date.monthValue
+                    if (usersOfMonths[key] != null) usersOfMonths[key]!!.add(
+                        it.user.login
+                    )
+                    else usersOfMonths[key] = mutableListOf(it.user.login)
+                } else breakNeeded = true
+            }
+        }
+        return usersOfMonths
+    }
+
+    private fun saveToDb(repoUserName: String, repoName: String, stargazer: Stargazer) {
+        GlobalScope.launch {
+            if (App.db.starDao().findByStargazerUserNameAndStarredAt(
+                    stargazer.user.login,
+                    stargazer.starred_at
+                ) == null
+            )
+                App.db.starDao().insertAll(
+                    Star(
+                        repoUserName,
+                        repoName,
+                        stargazer.user.login,
+                        stargazer.starred_at
+                    )
+                )
+        }
+    }
+
+    private fun loadFromDb(
         repoName: String,
         repoUserName: String,
         startDate: LocalDateTime
-    ): MutableMap<Int, MutableList<String>> {
+    ): Map<Int, MutableList<String>> {
         val usersOfMonths = mutableMapOf<Int, MutableList<String>>()
         val currentTime = LocalDateTime.now()
         GlobalScope.launch {
@@ -136,16 +143,12 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                         it.stargazerUsername
                     )
                     else usersOfMonths[key] = mutableListOf(it.stargazerUsername)
-//                            val currentAmountOfStars = months[key]
-//                            months[key] =
-//                                if (currentAmountOfStars != null) currentAmountOfStars + 1
-//                                else 1
                 }
             }
         return usersOfMonths
     }
 
-    fun showAndSave(
+    private fun show(
         usersOfMonths: Map<Int, MutableList<String>>,
         repoName: String,
         repoUserName: String,
@@ -159,7 +162,8 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
             xAxisStart
         )
         monthList = usersOfMonths.map {
-            (Month.values()[(it.key - 1) % 12].name.toLowerCase().capitalize() +
+            (Month.values()[(it.key - 1) % 12].name.toLowerCase(Locale.ROOT)
+                .capitalize(Locale.ROOT) +
                     if (it.key - 12 > 0) " (${currentTime.year})"
                     else " (${currentTime.year - 1})") to it.key
         }.toMap()
