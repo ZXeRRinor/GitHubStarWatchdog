@@ -1,5 +1,6 @@
 package com.zxerrinor.githubstarwatchdog.presenters
 
+import com.omegar.mvp.MvpPresenter
 import com.zxerrinor.githubstarwatchdog.App
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore.offlineMode
@@ -8,7 +9,7 @@ import com.zxerrinor.githubstarwatchdog.isInternetAvailable
 import com.zxerrinor.githubstarwatchdog.views.FindRepoView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import moxy.MvpPresenter
+
 import com.zxerrinor.githubstarwatchdog.database.Repository as RepositoryRecord
 
 class FindRepoPresenter : MvpPresenter<FindRepoView>() {

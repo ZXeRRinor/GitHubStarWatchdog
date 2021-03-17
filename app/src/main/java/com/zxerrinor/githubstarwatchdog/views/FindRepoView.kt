@@ -1,9 +1,8 @@
 package com.zxerrinor.githubstarwatchdog.views
 
-import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.StateStrategyType
-import moxy.viewstate.strategy.alias.AddToEndSingle
+import com.omegar.mvp.MvpView
+import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
 interface FindRepoView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)

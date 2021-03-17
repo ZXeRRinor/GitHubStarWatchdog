@@ -1,10 +1,9 @@
 package com.zxerrinor.githubstarwatchdog.views
 
 import com.github.mikephil.charting.data.BarEntry
-import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.StateStrategyType
-import moxy.viewstate.strategy.alias.AddToEndSingle
+import com.omegar.mvp.MvpView
+import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
 interface ShowStarChartView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)

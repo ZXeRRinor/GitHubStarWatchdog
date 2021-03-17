@@ -3,10 +3,10 @@ package com.zxerrinor.githubstarwatchdog.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.omegar.mvp.MvpAppCompatActivity
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.clearDatabaseCache
-import moxy.MvpAppCompatActivity
 
 class MainActivity : MvpAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

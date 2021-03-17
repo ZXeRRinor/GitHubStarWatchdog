@@ -18,10 +18,9 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowUserListOfMonthBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,5 +35,6 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
     }
 
     override fun onUserListItemClick(item: String, position: Int) {
+        // nothing
     }
 }

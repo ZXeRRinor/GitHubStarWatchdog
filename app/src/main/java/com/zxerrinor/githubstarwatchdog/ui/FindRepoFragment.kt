@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.omegar.mvp.MvpAppCompatFragment
+import com.omegar.mvp.presenter.InjectPresenter
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.databinding.FragmentFindRepoBinding
 import com.zxerrinor.githubstarwatchdog.presenters.FindRepoPresenter
 import com.zxerrinor.githubstarwatchdog.views.FindRepoView
-import moxy.MvpAppCompatFragment
-import moxy.presenter.InjectPresenter
 
 class FindRepoFragment : MvpAppCompatFragment(), FindRepoView {
     private var _binding: FragmentFindRepoBinding? = null
@@ -26,10 +26,9 @@ class FindRepoFragment : MvpAppCompatFragment(), FindRepoView {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFindRepoBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

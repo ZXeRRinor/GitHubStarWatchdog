@@ -1,6 +1,6 @@
 package com.zxerrinor.githubstarwatchdog
 
-import android.R
+import android.R.drawable.sym_def_app_icon
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -10,7 +10,6 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.zxerrinor.githubstarwatchdog.ui.MainActivity
-
 
 class LoadDataForFavouriteRepositoriesWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
@@ -31,7 +30,7 @@ class LoadDataForFavouriteRepositoriesWorker(appContext: Context, workerParams: 
             PendingIntent.getActivity(this.applicationContext, 0, intent, 0)
 
         val builder = NotificationCompat.Builder(this.applicationContext, "mainChannel")
-            .setSmallIcon(R.drawable.sym_def_app_icon)
+            .setSmallIcon(sym_def_app_icon)
             .setContentTitle("GitHub Stars Updated")
             .setContentText("Successfully updated stars of your favourite repositories!")
             .setPriority(NotificationCompat.PRIORITY_LOW)

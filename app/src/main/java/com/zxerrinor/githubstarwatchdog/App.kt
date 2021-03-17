@@ -12,7 +12,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-
 class App : Application() {
     private lateinit var retrofit: Retrofit
     override fun onCreate() {

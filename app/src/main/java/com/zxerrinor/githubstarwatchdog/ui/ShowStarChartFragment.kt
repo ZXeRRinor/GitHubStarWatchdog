@@ -14,13 +14,13 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.omegar.mvp.MvpAppCompatFragment
+import com.omegar.mvp.presenter.InjectPresenter
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.databinding.FragmentShowStarChartBinding
 import com.zxerrinor.githubstarwatchdog.presenters.ShowStarChartPresenter
 import com.zxerrinor.githubstarwatchdog.views.ShowStarChartView
-import moxy.MvpAppCompatFragment
-import moxy.presenter.InjectPresenter
 import java.text.DecimalFormat
 import java.time.Month
 import java.util.*
@@ -73,7 +73,9 @@ class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
                 }
             }
 
-            override fun onNothingSelected() {}
+            override fun onNothingSelected() {
+                // nothing
+            }
         })
         val data = BarData(BarDataSet(entries, label))
         val xAxis = chart.xAxis

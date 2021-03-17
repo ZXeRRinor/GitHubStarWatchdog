@@ -2,6 +2,7 @@ package com.zxerrinor.githubstarwatchdog.presenters
 
 import android.widget.Toast
 import com.github.mikephil.charting.data.BarEntry
+import com.omegar.mvp.MvpPresenter
 import com.zxerrinor.githubstarwatchdog.App
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.database.Repository
@@ -11,7 +12,6 @@ import com.zxerrinor.githubstarwatchdog.isInternetAvailable
 import com.zxerrinor.githubstarwatchdog.views.ShowStarChartView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import moxy.MvpPresenter
 import java.time.LocalDateTime
 import java.time.Month
 import java.util.*
