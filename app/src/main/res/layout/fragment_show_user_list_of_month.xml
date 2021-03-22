@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.ShowUserListOfMonthFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
         android:id="@+id/usersOfMonthRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
