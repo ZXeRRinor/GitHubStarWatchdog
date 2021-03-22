@@ -5,7 +5,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/userName"
+        android:id="@+id/text_user_name"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
