@@ -20,7 +20,7 @@ class FindRepoPresenter : MvpPresenter<FindRepoView>() {
         }
 
     override fun onFirstViewAttach() {
-//        viewState.showMessage("kek");
+        // nothing
     }
 
     fun onLoadButtonClicked(repoName: String) {
@@ -32,9 +32,11 @@ class FindRepoPresenter : MvpPresenter<FindRepoView>() {
         viewState.setHideNotLoadedSwitchVisibility(offlineMode)
     }
 
-    fun onFindRepoButtonClicked(repoUserName: String) = GlobalScope.launch {
-        viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName, true))
-        viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName))
+    fun onFindRepoButtonClicked(repoUserName: String) {
+        GlobalScope.launch {
+            viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName, true))
+            viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName))
+        }
     }
 
     private fun getRepositoriesOfUser(
