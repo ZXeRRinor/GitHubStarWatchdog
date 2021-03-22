@@ -28,7 +28,7 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
 
         binding.usersOfMonthRV.layoutManager = LinearLayoutManager(CurrentValuesStore.activity)
         val usersAdapter = UsersAdapter(
-            CurrentValuesStore.months[CurrentValuesStore.month]!!.toMutableList(),
+            CurrentValuesStore.months,
             this
         )
         binding.usersOfMonthRV.adapter = usersAdapter
