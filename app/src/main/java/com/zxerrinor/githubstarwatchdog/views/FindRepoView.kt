@@ -1,10 +1,10 @@
 package com.zxerrinor.githubstarwatchdog.views
 
-import com.omegar.mvp.MvpView
+import com.omega_r.base.mvp.views.OmegaView
 import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.omegar.mvp.viewstate.strategy.StateStrategyType
 
-interface FindRepoView : MvpView {
+interface FindRepoView : OmegaView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setRepoInputAdapter(repoList: List<String>)
 

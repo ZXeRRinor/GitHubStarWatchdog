@@ -1,9 +1,6 @@
 package com.zxerrinor.githubstarwatchdog
 
-import com.zxerrinor.githubstarwatchdog.ui.MainActivity
-
 object CurrentValuesStore {
-    lateinit var activity: MainActivity
     var repoUserName = ""
     var repoName = ""
     var month = 0

@@ -2,13 +2,14 @@ package com.zxerrinor.githubstarwatchdog.presenters
 
 import android.widget.Toast
 import com.github.mikephil.charting.data.BarEntry
-import com.omegar.mvp.MvpPresenter
+import com.omega_r.base.mvp.presenters.OmegaPresenter
 import com.zxerrinor.githubstarwatchdog.App
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.database.Repository
 import com.zxerrinor.githubstarwatchdog.database.Star
 import com.zxerrinor.githubstarwatchdog.githubapi.Stargazer
 import com.zxerrinor.githubstarwatchdog.isInternetAvailable
+import com.zxerrinor.githubstarwatchdog.ui.ShowStarChartFragment
 import com.zxerrinor.githubstarwatchdog.views.ShowStarChartView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,8 +18,15 @@ import java.time.Month
 import java.util.*
 import kotlin.math.ceil
 
-class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
+class ShowStarChartPresenter : OmegaPresenter<ShowStarChartView>() {
     private var monthList = mapOf<String, Int>()
+
+    private val fragment: ShowStarChartFragment
+        get() {
+            val fragment = this.attachedViews.toList().first()
+            if (fragment is ShowStarChartFragment) return fragment
+            else throw IllegalStateException("Illegal object")
+        }
 
     fun onCurrentRepoFavouriteSwitchClicked() = GlobalScope.launch {
         val repo = App.db.repositoryDao().findByRepoNameAndRepoUserName(
@@ -60,9 +68,11 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
 
     private fun showUpdateStatusToast(updated: Boolean) {
         val toastText = if (updated) "Chart data updated!" else "Offline mode"
-        CurrentValuesStore.activity.runOnUiThread {
+        val activity =
+            fragment.activity ?: throw IllegalStateException("Fragment must be in activity")
+        activity.runOnUiThread {
             Toast.makeText(
-                CurrentValuesStore.activity, toastText,
+                activity, toastText,
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -87,7 +97,7 @@ class ShowStarChartPresenter : MvpPresenter<ShowStarChartView>() {
                     .getStargazers(repoUserName, repoName, page, 100).execute()
             page--
             (response.body()
-                ?: throw IllegalArgumentException("not found stargazers for this repository")).forEach {
+                ?: throw IllegalArgumentException("Not found stargazers for this repository")).forEach {
                 saveToDb(repoUserName, repoName, it)
                 val date = LocalDateTime.parse(it.starred_at.replace("Z", ""))
                 if (date >= startDate) {

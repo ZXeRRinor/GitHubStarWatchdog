@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.omegar.mvp.MvpAppCompatFragment
+import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.presenter.InjectPresenter
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.R
@@ -26,12 +26,12 @@ import java.time.Month
 import java.util.*
 
 
-class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
+class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
     private var _binding: FragmentShowStarChartBinding? = null
     private val binding get() = _binding!!
 
     @InjectPresenter
-    lateinit var showStarChartPresenter: ShowStarChartPresenter
+    override lateinit var presenter: ShowStarChartPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,17 +45,18 @@ class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
         super.onViewCreated(view, savedInstanceState)
 
         binding.currentRepoFavouriteSwitch.setOnClickListener {
-            showStarChartPresenter.onCurrentRepoFavouriteSwitchClicked()
+            presenter.onCurrentRepoFavouriteSwitchClicked()
         }
 
         binding.showMonthButton.setOnClickListener {
-            showStarChartPresenter.onShowMonthButtonClicked(binding.monthInput.selectedItem.toString())
+            presenter.onShowMonthButtonClicked(binding.monthInput.selectedItem.toString())
             findNavController().navigate(R.id.action_ShowStarChartFragment_to_ShowUserListOfMonth)
         }
     }
 
     override fun setIsFavouriteSwitchState(state: Boolean) {
-        CurrentValuesStore.activity.runOnUiThread {
+        val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
+        activity.runOnUiThread {
             binding.currentRepoFavouriteSwitch.isChecked = state
         }
     }
@@ -91,13 +92,14 @@ class ShowStarChartFragment : MvpAppCompatFragment(), ShowStarChartView {
     }
 
     override fun setMonthInputAdapter(monthList: List<String>) {
+        val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
         val monthInputAdapter = ArrayAdapter(
-            CurrentValuesStore.activity,
+            activity,
             android.R.layout.simple_spinner_item,
             monthList
         )
         monthInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        CurrentValuesStore.activity.runOnUiThread {
+        activity.runOnUiThread {
             binding.monthInput.adapter = monthInputAdapter
             monthInputAdapter.notifyDataSetChanged()
         }

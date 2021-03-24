@@ -30,10 +30,11 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.usersOfMonthRV.layoutManager = LinearLayoutManager(CurrentValuesStore.activity)
+        val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
+        binding.usersOfMonthRV.layoutManager = LinearLayoutManager(activity)
         var pos = 0
         CurrentValuesStore.months.forEach {
-            if(it.key < CurrentValuesStore.month) pos += it.value.size
+            if (it.key < CurrentValuesStore.month) pos += it.value.size
         }
         binding.usersOfMonthRV.layoutManager!!.scrollToPosition(pos)
     }

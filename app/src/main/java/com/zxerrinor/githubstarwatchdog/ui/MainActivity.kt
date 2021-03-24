@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.omegar.mvp.MvpAppCompatActivity
-import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.clearDatabaseCache
 
 class MainActivity : MvpAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CurrentValuesStore.activity = this
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
     }
@@ -28,7 +26,7 @@ class MainActivity : MvpAppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_clear_cache -> {
-                clearDatabaseCache()
+                clearDatabaseCache(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)

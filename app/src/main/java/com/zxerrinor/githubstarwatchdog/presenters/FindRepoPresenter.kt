@@ -1,18 +1,26 @@
 package com.zxerrinor.githubstarwatchdog.presenters
 
-import com.omegar.mvp.MvpPresenter
+import com.omega_r.base.mvp.presenters.OmegaPresenter
 import com.zxerrinor.githubstarwatchdog.App
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
 import com.zxerrinor.githubstarwatchdog.CurrentValuesStore.offlineMode
 import com.zxerrinor.githubstarwatchdog.githubapi.Repository
 import com.zxerrinor.githubstarwatchdog.isInternetAvailable
+import com.zxerrinor.githubstarwatchdog.ui.FindRepoFragment
 import com.zxerrinor.githubstarwatchdog.views.FindRepoView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 import com.zxerrinor.githubstarwatchdog.database.Repository as RepositoryRecord
 
-class FindRepoPresenter : MvpPresenter<FindRepoView>() {
+class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
+
+    private val fragment: FindRepoFragment
+        get() {
+            val fragment = this.attachedViews.toList().first()
+            if (fragment is FindRepoFragment) return fragment
+            else throw IllegalStateException("Illegal object")
+        }
+
     var hideNotLoaded: Boolean = false
         set(value) {
             field = value

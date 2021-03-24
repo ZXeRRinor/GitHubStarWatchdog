@@ -1,6 +1,7 @@
 package com.zxerrinor.githubstarwatchdog
 
 import android.widget.Toast
+import com.omegar.mvp.MvpAppCompatActivity
 import com.zxerrinor.githubstarwatchdog.database.Star
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ fun isInternetAvailable(): Boolean {
     }
 }
 
-fun clearDatabaseCache() = GlobalScope.launch {
+fun clearDatabaseCache(activity: MvpAppCompatActivity) = GlobalScope.launch {
     val repoDao = App.db.repositoryDao()
     val starDao = App.db.starDao()
     repoDao.getAllByFavouriteState(false).forEach { repo ->
@@ -28,7 +29,6 @@ fun clearDatabaseCache() = GlobalScope.launch {
             repoDao.delete(repo)
         }
     }
-    val activity = CurrentValuesStore.activity
     activity.runOnUiThread {
         Toast.makeText(
             activity,
