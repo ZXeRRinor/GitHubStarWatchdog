@@ -13,12 +13,12 @@ import java.time.Month
 import java.util.*
 
 class UsersAdapter(
-    private val users: Map<Int, List<String>>,
+    private val users: Map<Byte, List<String>>,
     private val onClickListener: OnUserItemClickListener
 ) : RecyclerView.Adapter<UserViewHolder>(), StickyAdapter<UserHeaderHolder> {
 
     private val plainUsers = users.keys.fold(listOf<String>()) { a, elem -> a + users[elem]!! }
-    private val userPositions: Map<String, Int> =
+    private val userPositions: Map<String, Byte> =
         users.entries.fold(mapOf()) { a, elem -> a + elem.value.map { it to elem.key } }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -49,14 +49,14 @@ class UsersAdapter(
         viewHolder.initialize(findMonthForUserInPosition(position), onClickListener)
     }
 
-    private fun findMonthForUserInPosition(position: Int): Int {
+    private fun findMonthForUserInPosition(position: Int): Byte {
         val userName = plainUsers[position]
         return userPositions[userName] ?: throw Resources.NotFoundException("user not found")
     }
 }
 
 class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var listItemUserTextView: TextView = itemView.findViewById(R.id.text_user_name)
+    private var listItemUserTextView: TextView = itemView.findViewById(R.id.text_user_name)
 
     fun bind(text: String) {
         listItemUserTextView.text = text
@@ -71,7 +71,7 @@ class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 class UserHeaderHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var listItemUserTextView: TextView = itemView.findViewById(R.id.text_month_name)
+    private var listItemUserTextView: TextView = itemView.findViewById(R.id.text_month_name)
 
     fun bind(month: Int) {
         val currentTime = LocalDateTime.now()
@@ -81,7 +81,7 @@ class UserHeaderHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 else " (${currentTime.year - 1})")
     }
 
-    fun initialize(month: Int, action: OnUserItemClickListener) {
+    fun initialize(month: Byte, action: OnUserItemClickListener) {
         val currentTime = LocalDateTime.now()
         val text = (Month.values()[(month - 1) % 12].name.toLowerCase(Locale.ROOT)
             .capitalize(Locale.ROOT) +

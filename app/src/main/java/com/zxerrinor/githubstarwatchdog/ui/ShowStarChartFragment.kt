@@ -16,7 +16,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.presenter.InjectPresenter
-import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
+import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME
 import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.databinding.FragmentShowStarChartBinding
 import com.zxerrinor.githubstarwatchdog.presenters.ShowStarChartPresenter
@@ -50,7 +50,6 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
 
         binding.showMonthButton.setOnClickListener {
             presenter.onShowMonthButtonClicked(binding.monthInput.selectedItem.toString())
-            findNavController().navigate(R.id.action_ShowStarChartFragment_to_ShowUserListOfMonth)
         }
     }
 
@@ -69,8 +68,13 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
         chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(e: Entry?, h: Highlight?) {
                 if (e != null) {
-                    CurrentValuesStore.month = e.x.toInt()
-                    findNavController().navigate(R.id.action_ShowStarChartFragment_to_ShowUserListOfMonth)
+                    val bundle = Bundle()
+                    bundle.putByte(MONTH_ARGUMENT_NAME, e.x.toInt().toByte())
+//                    CurrentValuesStore.month = e.x.toInt()
+                    findNavController().navigate(
+                        R.id.action_ShowStarChartFragment_to_ShowUserListOfMonthFragment,
+                        bundle
+                    )
                 }
             }
 

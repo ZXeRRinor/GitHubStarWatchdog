@@ -1,11 +1,10 @@
 package com.zxerrinor.githubstarwatchdog.presenters
 
+import android.os.Bundle
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.omega_r.base.mvp.presenters.OmegaPresenter
-import com.zxerrinor.githubstarwatchdog.App
-import com.zxerrinor.githubstarwatchdog.CurrentValuesStore
-import com.zxerrinor.githubstarwatchdog.CurrentValuesStore.offlineMode
+import com.zxerrinor.githubstarwatchdog.*
 import com.zxerrinor.githubstarwatchdog.githubapi.Repository
-import com.zxerrinor.githubstarwatchdog.isInternetAvailable
 import com.zxerrinor.githubstarwatchdog.ui.FindRepoFragment
 import com.zxerrinor.githubstarwatchdog.views.FindRepoView
 import kotlinx.coroutines.GlobalScope
@@ -13,6 +12,9 @@ import kotlinx.coroutines.launch
 import com.zxerrinor.githubstarwatchdog.database.Repository as RepositoryRecord
 
 class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
+
+    private var repoUserName = ""
+    private var offlineMode = false
 
     private val fragment: FindRepoFragment
         get() {
@@ -22,17 +24,21 @@ class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
         }
 
     var hideNotLoaded: Boolean = false
-        set(value) {
-            field = value
-            CurrentValuesStore.repositoriesOfUser = null
-        }
 
     override fun onFirstViewAttach() {
         // nothing
     }
 
     fun onLoadButtonClicked(repoName: String) {
-        CurrentValuesStore.repoName = repoName
+//        CurrentValuesStore.repoName = repoName
+        val bundle = Bundle()
+        bundle.putString(REPO_NAME_ARGUMENT_NAME, repoName)
+        bundle.putString(REPO_USER_NAME_ARGUMENT_NAME, repoUserName)
+        bundle.putBoolean(OFFLINE_MODE_ARGUMENT_NAME, offlineMode)
+        findNavController(fragment).navigate(
+            R.id.action_FindRepoFragment_to_ShowChartFragment,
+            bundle
+        )
     }
 
     fun onOfflineModeSwitchClicked() {
@@ -51,15 +57,11 @@ class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
         repoUserName: String,
         forceUseDb: Boolean = false
     ): List<String> {
-        if (CurrentValuesStore.repositoriesOfUser != null && CurrentValuesStore.repoUserName == repoUserName)
-            return CurrentValuesStore.repositoriesOfUser!!
-        CurrentValuesStore.repoUserName = repoUserName
-        val result = (if (isInternetAvailable() && !offlineMode && !forceUseDb)
+        this.repoUserName = repoUserName
+        return (if (isInternetAvailable() && !offlineMode && !forceUseDb)
             loadRepositoriesOfUserFromGitHub(repoUserName)
         else
             loadRepositoriesOfUserFromDb(repoUserName)).sorted()
-        CurrentValuesStore.repositoriesOfUser = result
-        return result
     }
 
     private fun loadRepositoriesOfUserFromGitHub(repoUserName: String): List<String> {

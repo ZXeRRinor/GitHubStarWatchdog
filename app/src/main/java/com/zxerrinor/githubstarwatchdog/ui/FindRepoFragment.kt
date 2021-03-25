@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.presenter.InjectPresenter
-import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.databinding.FragmentFindRepoBinding
 import com.zxerrinor.githubstarwatchdog.presenters.FindRepoPresenter
 import com.zxerrinor.githubstarwatchdog.views.FindRepoView
@@ -35,7 +33,7 @@ class FindRepoFragment : OmegaFragment(), FindRepoView {
         binding.buttonLoad.setOnClickListener {
             if (binding.repoInput.selectedItem == null) {
                 val activity =
-                    activity ?: throw IllegalStateException("Fragment must be in activity")
+                    activity ?: throw IllegalStateException("FindRepoFragment must be in activity")
                 activity.runOnUiThread {
                     Toast.makeText(
                         activity, "Please, select repository for watching",
@@ -47,7 +45,6 @@ class FindRepoFragment : OmegaFragment(), FindRepoView {
             presenter.onLoadButtonClicked(
                 binding.repoInput.selectedItem.toString()
             )
-            findNavController().navigate(R.id.action_FindRepoFragment_to_ShowChartFragment)
         }
 
         binding.findUserRepos.setOnClickListener {

@@ -22,12 +22,12 @@
         tools:layout="@layout/fragment_show_star_chart">
 
         <action
-            android:id="@+id/action_ShowStarChartFragment_to_ShowUserListOfMonth"
+            android:id="@+id/action_ShowStarChartFragment_to_ShowUserListOfMonthFragment"
             app:destination="@id/ShowUserListOfMonthFragment" />
     </fragment>
     <fragment
         android:id="@+id/ShowUserListOfMonthFragment"
         android:name="com.zxerrinor.githubstarwatchdog.ui.ShowUserListOfMonthFragment"
         android:label="@string/showUserListOfMonthFragmentLabel"
-        tools:layout="@layout/fragment_show_user_list_of_month"></fragment>
+        tools:layout="@layout/fragment_show_user_list_of_month" />
 </navigation>
