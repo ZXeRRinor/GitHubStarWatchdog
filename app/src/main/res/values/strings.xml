@@ -1,16 +1,19 @@
 <resources>
     <string name="app_name">GithubStarWatchdog</string>
     <string name="action_clear_cache">Clear Cache</string>
-    <string name="showStarChartFragmentLabel">Show Bar Chart Of Stars Fragment</string>
-    <string name="showUserListOfMonthFragmentLabel">Show List Of Users For Selected Month</string>
-    <string name="findRepoFragmentLabel">Find Repository Fragment</string>
-    <string name="show_chart">Show Chart</string>
-    <string name="userNameAutofill">JetBrains</string>
-    <string name="offline_mode">Offline Mode</string>
-    <string name="hide_not_loaded">Hide not loaded</string>
-    <string name="favourite_repository">Favourite Repository</string>
-    <string name="users_in_month">Users in month</string>
-    <string name="show">Show</string>
+    <string name="label_show_star_chart_fragment_label">Show Bar Chart Of Stars Fragment</string>
+    <string name="label_show_user_list_of_month_fragment">Show List Of Users For Selected Month</string>
+    <string name="label_find_repo_fragment">Find Repository Fragment</string>
+    <string name="label_show_chart">Show Chart</string>
+    <string name="label_offline_mode">Offline Mode</string>
+    <string name="label_hide_not_loaded">Hide not loaded</string>
+    <string name="label_switch_current_repo_is_favourite">Favourite Repository</string>
+    <string name="title_users_in_month">Users in month</string>
+    <string name="button_show_text">Show</string>
+    <string name="title_username_input">Username</string>
+    <string name="title_reponame_input">Repository</string>
+    <string name="button_find_repos_text">Find Repos</string>
+    <string name="hint_username_input">Name of github user or organization</string>
 
 
 </resources>

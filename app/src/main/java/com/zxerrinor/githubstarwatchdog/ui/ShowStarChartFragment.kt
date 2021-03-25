@@ -44,24 +44,24 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.currentRepoFavouriteSwitch.setOnClickListener {
+        binding.switchCurrentRepoIsFavourite.setOnClickListener {
             presenter.onCurrentRepoFavouriteSwitchClicked()
         }
 
-        binding.showMonthButton.setOnClickListener {
-            presenter.onShowMonthButtonClicked(binding.monthInput.selectedItem.toString())
+        binding.buttonShowMonth.setOnClickListener {
+            presenter.onShowMonthButtonClicked(binding.inputMonth.selectedItem.toString())
         }
     }
 
     override fun setIsFavouriteSwitchState(state: Boolean) {
         val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
         activity.runOnUiThread {
-            binding.currentRepoFavouriteSwitch.isChecked = state
+            binding.switchCurrentRepoIsFavourite.isChecked = state
         }
     }
 
     override fun setChartEntries(entries: List<BarEntry>, label: String, start: Int) {
-        val chart = binding.starChart
+        val chart = binding.chartStarsPerMonth
         chart.setScaleEnabled(false)
         chart.setPinchZoom(false)
 
@@ -104,7 +104,7 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
         )
         monthInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         activity.runOnUiThread {
-            binding.monthInput.adapter = monthInputAdapter
+            binding.inputMonth.adapter = monthInputAdapter
             monthInputAdapter.notifyDataSetChanged()
         }
     }

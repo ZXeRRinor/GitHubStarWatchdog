@@ -47,8 +47,8 @@ class FindRepoFragment : OmegaFragment(), FindRepoView {
             )
         }
 
-        binding.findUserRepos.setOnClickListener {
-            presenter.onFindRepoButtonClicked(binding.username.text.toString())
+        binding.buttonFindUserRepos.setOnClickListener {
+            presenter.onFindRepoButtonClicked(binding.inputUsername.text.toString())
         }
 
         binding.offlineModeSwitch.setOnClickListener {
