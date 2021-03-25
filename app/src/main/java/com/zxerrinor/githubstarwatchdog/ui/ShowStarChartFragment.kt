@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -14,6 +13,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.omega_r.base.adapters.OmegaSpinnerAdapter
 import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.presenter.InjectPresenter
 import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME
@@ -97,7 +97,7 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
 
     override fun setMonthInputAdapter(monthList: List<String>) {
         val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
-        val monthInputAdapter = ArrayAdapter(
+        val monthInputAdapter = OmegaSpinnerAdapter.StringAdapter(
             activity,
             android.R.layout.simple_spinner_item,
             monthList
