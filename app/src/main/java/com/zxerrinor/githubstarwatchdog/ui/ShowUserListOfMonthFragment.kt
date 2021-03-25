@@ -41,12 +41,14 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
         val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
         binding.usersOfMonthRV.layoutManager = LinearLayoutManager(activity)
         var pos = 0
+        var sizeOfList = 0
         val month = arguments?.getByte(MONTH_ARGUMENT_NAME)
             ?: throw IllegalArgumentException("$MONTH_ARGUMENT_NAME not found in arguments")
         months.forEach {
-            if (it.key < month) pos += it.value.size
+            sizeOfList += it.value.size
+            if (it.key - 1 < month) pos += it.value.size
         }
-        binding.usersOfMonthRV.layoutManager!!.scrollToPosition(pos)
+        binding.usersOfMonthRV.layoutManager!!.scrollToPosition(sizeOfList - pos)
     }
 
     override fun onUserListItemClick(item: String, position: Int) {
