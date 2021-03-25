@@ -17,6 +17,7 @@ const val MONTH_NUMBERS_ARGUMENT_NAME = "monthNumbers"
 const val REPO_NAME_ARGUMENT_NAME = "repoName"
 const val REPO_USER_NAME_ARGUMENT_NAME = "repoUserName"
 const val OFFLINE_MODE_ARGUMENT_NAME = "offlineMode"
+const val DATABASE_NAME = "GitHubStarWatchdog main database"
 const val GITHUB_AUTH_TOKEN = "dd2937208d893eca075a22dddeeacf95ab419e29"
 
 class App : Application() {
@@ -25,7 +26,7 @@ class App : Application() {
         super.onCreate()
         db = Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "database-name"
+            AppDatabase::class.java, DATABASE_NAME
         ).enableMultiInstanceInvalidation().build()
 
         retrofit = Retrofit.Builder()
