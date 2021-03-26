@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.73"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repoInput" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_repo" />
 
     <TextView
         android:id="@+id/textview_username_input_label"
@@ -67,7 +67,7 @@
         app:layout_constraintTop_toBottomOf="@+id/input_username" />
 
     <Spinner
-        android:id="@+id/repoInput"
+        android:id="@+id/spinner_repo"
         android:layout_width="260dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
@@ -77,7 +77,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textview_reponame_input_label" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/offlineModeSwitch"
+        android:id="@+id/switch_offline_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -88,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button_load" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/hideNotLoadedSwitch"
+        android:id="@+id/switch_hide_not_loaded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -97,5 +97,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.721"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/offlineModeSwitch" />
+        app:layout_constraintTop_toBottomOf="@+id/switch_offline_mode" />
 </androidx.constraintlayout.widget.ConstraintLayout>

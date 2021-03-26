@@ -1,85 +1,51 @@
 package com.zxerrinor.githubstarwatchdog.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
+import androidx.core.view.isVisible
+import com.google.android.material.switchmaterial.SwitchMaterial
+import com.omega_r.adapters.OmegaSpinnerAdapter
 import com.omega_r.base.components.OmegaFragment
-import com.omegar.mvp.presenter.InjectPresenter
-import com.zxerrinor.githubstarwatchdog.databinding.FragmentFindRepoBinding
+import com.omegar.mvp.ktx.providePresenter
+import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.presenters.FindRepoPresenter
 import com.zxerrinor.githubstarwatchdog.views.FindRepoView
 
-class FindRepoFragment : OmegaFragment(), FindRepoView {
-    private var _binding: FragmentFindRepoBinding? = null
-    private val binding get() = _binding!!
+class FindRepoFragment : OmegaFragment(R.layout.fragment_find_repo), FindRepoView {
 
-    @InjectPresenter
-    override lateinit var presenter: FindRepoPresenter
+    override val presenter: FindRepoPresenter by providePresenter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFindRepoBinding.inflate(inflater, container, false)
-        return binding.root
+    private val repoSpinner: Spinner by bind(R.id.spinner_repo) {
+        adapter = repoInputAdapter
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.buttonLoad.setOnClickListener {
-            if (binding.repoInput.selectedItem == null) {
-                val activity =
-                    activity ?: throw IllegalStateException("FindRepoFragment must be in activity")
-                activity.runOnUiThread {
-                    Toast.makeText(
-                        activity, "Please, select repository for watching",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                return@setOnClickListener
-            }
-            presenter.onLoadButtonClicked(
-                binding.repoInput.selectedItem.toString()
-            )
+    private val userNameEditText: EditText by bind(R.id.input_username)
+    private val hideNotLoadedSwitch: SwitchMaterial by bind(R.id.switch_hide_not_loaded)
+    private val repoInputAdapter: OmegaSpinnerAdapter.StringAdapter by bind( init = {
+         return@bind OmegaSpinnerAdapter.StringAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
+    })
 
-        binding.buttonFindUserRepos.setOnClickListener {
-            presenter.onFindRepoButtonClicked(binding.inputUsername.text.toString())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setClickListener(R.id.button_load) {
+            presenter.onLoadButtonClicked(repoSpinner.selectedItem?.toString())
         }
-
-        binding.offlineModeSwitch.setOnClickListener {
-            presenter.onOfflineModeSwitchClicked()
-        }
-
-        binding.hideNotLoadedSwitch.setOnClickListener {
-            presenter.hideNotLoaded = !presenter.hideNotLoaded
+        setClickListener(R.id.switch_offline_mode, presenter::onOfflineModeSwitchClicked)
+        setClickListener(R.id.button_find_user_repos) {
+            presenter.onFindRepoButtonClicked(userNameEditText.text.toString())
         }
     }
 
     override fun setRepoInputAdapter(repoList: List<String>) {
-        val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
-        val repoInputAdapter = ArrayAdapter(
-            activity,
-            android.R.layout.simple_spinner_item,
-            repoList
-        )
-        repoInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        activity.runOnUiThread {
-            binding.repoInput.adapter = repoInputAdapter
-            repoInputAdapter.notifyDataSetChanged()
-        }
+        repoInputAdapter.list = repoList
     }
 
     override fun setHideNotLoadedSwitchVisibility(visible: Boolean) {
-        binding.hideNotLoadedSwitch.visibility = if (visible) View.VISIBLE else View.GONE
+        hideNotLoadedSwitch.isVisible = visible
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

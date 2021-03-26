@@ -1,8 +1,11 @@
 package com.zxerrinor.githubstarwatchdog.presenters
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.omega_r.base.mvp.presenters.OmegaPresenter
+import com.omega_r.libs.omegatypes.Text
+import com.omega_r.libs.omegatypes.toText
 import com.zxerrinor.githubstarwatchdog.*
 import com.zxerrinor.githubstarwatchdog.githubapi.Repository
 import com.zxerrinor.githubstarwatchdog.ui.FindRepoFragment
@@ -29,16 +32,20 @@ class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
         // nothing
     }
 
-    fun onLoadButtonClicked(repoName: String) {
+    fun onLoadButtonClicked(repoName: String?) {
+        if (repoName.isNullOrEmpty()) {
+          viewState.showToast("Please, select repository for watching".toText())
+        } else {
 //        CurrentValuesStore.repoName = repoName
-        val bundle = Bundle()
-        bundle.putString(REPO_NAME_ARGUMENT_NAME, repoName)
-        bundle.putString(REPO_USER_NAME_ARGUMENT_NAME, repoUserName)
-        bundle.putBoolean(OFFLINE_MODE_ARGUMENT_NAME, offlineMode)
-        findNavController(fragment).navigate(
-            R.id.action_FindRepoFragment_to_ShowChartFragment,
-            bundle
-        )
+            val bundle = Bundle()
+            bundle.putString(REPO_NAME_ARGUMENT_NAME, repoName)
+            bundle.putString(REPO_USER_NAME_ARGUMENT_NAME, repoUserName)
+            bundle.putBoolean(OFFLINE_MODE_ARGUMENT_NAME, offlineMode)
+            findNavController(fragment).navigate(
+                R.id.action_FindRepoFragment_to_ShowChartFragment,
+                bundle
+            )
+        }
     }
 
     fun onOfflineModeSwitchClicked() {
