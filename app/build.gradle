@@ -65,7 +65,8 @@ dependencies {
     def room_version = "2.2.6"
     def work_version = "2.5.0"
     implementation 'com.github.omega-r:omegalint:0.2.3'
-    implementation 'com.github.Omega-R:OmegaBase:1.3.1'
+    implementation 'com.github.Omega-R.OmegaBase:annotations:7fe165d'
+    implementation 'com.github.Omega-R.OmegaBase:core:7fe165d'
     implementation 'com.github.Omega-R:OmegaRecyclerView:1.9.8@aar'
 
 
@@ -81,8 +82,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.11.0'
-    implementation 'com.github.Omega-R.OmegaMoxy:moxy-androidx:1.7.3'
-    kapt 'com.github.Omega-R.OmegaMoxy:moxy-compiler:1.5.7'
+    implementation 'com.github.Omega-R.OmegaMoxy:moxy-androidx:2.2.0'
+    implementation 'com.github.Omega-R.OmegaMoxy:moxy-ktx:2.2.0'
+    kapt 'com.github.Omega-R.OmegaMoxy:moxy-compiler:2.2.0'
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 //    implementation 'androidx.core:core-ktx:1.3.2'
 //    implementation 'androidx.appcompat:appcompat:1.2.0'

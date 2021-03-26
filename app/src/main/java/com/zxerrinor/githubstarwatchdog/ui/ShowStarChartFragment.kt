@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.omega_r.base.adapters.OmegaSpinnerAdapter
+import com.omega_r.adapters.OmegaSpinnerAdapter
 import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.presenter.InjectPresenter
 import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME

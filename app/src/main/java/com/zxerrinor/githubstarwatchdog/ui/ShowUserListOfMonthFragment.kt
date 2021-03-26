@@ -38,8 +38,6 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
-        binding.usersOfMonthRV.layoutManager = LinearLayoutManager(activity)
         var pos = 0
         var sizeOfList = 0
         val month = arguments?.getByte(MONTH_ARGUMENT_NAME)
