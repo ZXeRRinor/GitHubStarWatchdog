@@ -8,8 +8,9 @@ import com.omega_r.adapters.OmegaSpinnerAdapter
 import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.ktx.providePresenter
 import com.zxerrinor.githubstarwatchdog.R
+import com.zxerrinor.githubstarwatchdog.ui.base.BaseFragment
 
-class FindRepoFragment : OmegaFragment(R.layout.fragment_find_repo), FindRepoView {
+class FindRepoFragment : BaseFragment(R.layout.fragment_find_repo), FindRepoView {
 
     override val presenter: FindRepoPresenter by providePresenter()
 

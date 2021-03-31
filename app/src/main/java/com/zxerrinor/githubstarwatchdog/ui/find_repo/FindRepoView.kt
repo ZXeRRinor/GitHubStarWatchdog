@@ -4,8 +4,9 @@ import com.omega_r.base.mvp.views.OmegaView
 import com.omegar.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.omegar.mvp.viewstate.strategy.StateStrategyType
 import com.omegar.mvp.viewstate.strategy.StrategyType
+import com.zxerrinor.githubstarwatchdog.ui.base.BaseView
 
-interface FindRepoView : OmegaView {
+interface FindRepoView : BaseView {
     @StateStrategyType(StrategyType.ADD_TO_END_SINGLE)
     fun setRepoSpinnerContent(repoList: List<String>)
 

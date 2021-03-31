@@ -1,4 +1,4 @@
-package com.zxerrinor.githubstarwatchdog.ui.base.show_star_chart
+package com.zxerrinor.githubstarwatchdog.ui.show_star_chart
 
 import android.app.Activity
 import android.os.Bundle
@@ -11,6 +11,7 @@ import com.zxerrinor.githubstarwatchdog.*
 import com.zxerrinor.githubstarwatchdog.database.Repository
 import com.zxerrinor.githubstarwatchdog.database.Star
 import com.zxerrinor.githubstarwatchdog.githubapi.Stargazer
+import com.zxerrinor.githubstarwatchdog.ui.base.BasePresenter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -18,7 +19,7 @@ import java.time.Month
 import java.util.*
 import kotlin.math.ceil
 
-class ShowStarChartPresenter : OmegaPresenter<ShowStarChartView>() {
+class ShowStarChartPresenter : BasePresenter<ShowStarChartView>() {
     private var monthList = mapOf<String, Byte>()
 
     private var months = mapOf<Byte, List<String>>()

@@ -1,4 +1,4 @@
-package com.zxerrinor.githubstarwatchdog.ui.base.show_star_chart
+package com.zxerrinor.githubstarwatchdog.ui.show_star_chart
 
 import android.os.Bundle
 import android.view.View
@@ -20,12 +20,13 @@ import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.ktx.providePresenter
 import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME
 import com.zxerrinor.githubstarwatchdog.R
+import com.zxerrinor.githubstarwatchdog.ui.base.BaseFragment
 import java.text.DecimalFormat
 import java.time.Month
 import java.util.*
 
 
-class ShowStarChartFragment : OmegaFragment(R.layout.fragment_show_star_chart), ShowStarChartView {
+class ShowStarChartFragment : BaseFragment(R.layout.fragment_show_star_chart), ShowStarChartView {
 
     override val presenter: ShowStarChartPresenter by providePresenter()
 

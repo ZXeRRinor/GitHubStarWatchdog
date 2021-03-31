@@ -6,11 +6,12 @@ import com.omega_r.base.mvp.presenters.OmegaPresenter
 import com.omega_r.libs.omegatypes.toText
 import com.zxerrinor.githubstarwatchdog.*
 import com.zxerrinor.githubstarwatchdog.githubapi.Repository
+import com.zxerrinor.githubstarwatchdog.ui.base.BasePresenter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.zxerrinor.githubstarwatchdog.database.Repository as RepositoryRecord
 
-class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
+class FindRepoPresenter : BasePresenter<FindRepoView>() {
 
     private var repoUserName = ""
     private var offlineMode = false

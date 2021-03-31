@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/ShowStarChartFragment"
-        android:name="com.zxerrinor.githubstarwatchdog.ui.base.show_star_chart.ShowStarChartFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.show_star_chart.ShowStarChartFragment"
         android:label="@string/label_show_star_chart_fragment_label"
         tools:layout="@layout/fragment_show_star_chart">
 
