@@ -4,39 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
+import com.omegar.mvp.ktx.providePresenter
 import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME
 import com.zxerrinor.githubstarwatchdog.MONTH_NUMBERS_ARGUMENT_NAME
-import com.zxerrinor.githubstarwatchdog.adapters.OnUserItemClickListener
-import com.zxerrinor.githubstarwatchdog.adapters.UsersAdapter
-import com.zxerrinor.githubstarwatchdog.databinding.FragmentShowUserListOfMonthBinding
+import com.zxerrinor.githubstarwatchdog.R
+import com.zxerrinor.githubstarwatchdog.ui.base.BaseFragment
 
-class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
-    private var _binding: FragmentShowUserListOfMonthBinding? = null
-    private val binding get() = _binding!!
-    private var months = mapOf<Byte, List<String>>()
+class ShowUserListOfMonthFragment : BaseFragment(R.layout.fragment_show_user_list_of_month), ShowUserListOfMonthView {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentShowUserListOfMonthBinding.inflate(inflater, container, false)
-        val monthNumbers = arguments?.getByteArray(MONTH_NUMBERS_ARGUMENT_NAME)
-            ?: throw IllegalArgumentException("$MONTH_NUMBERS_ARGUMENT_NAME not found in arguments")
-        months = monthNumbers.map {
-            it to (arguments?.getStringArrayList(it.toString())
-                ?: throw IllegalArgumentException("List of users for month \"$it\" not found in arguments"))
-        }.toMap()
-        val usersAdapter = UsersAdapter(
-            months,
-            this
-        )
-        binding.rvUsersOfMonth.adapter = usersAdapter
-        return binding.root
-    }
+    override val presenter: ShowUserListOfMonthPresenter by providePresenter()
+
+    private val usersOfMonthRv: OmegaRecyclerView by bind(R.id.rv_users_of_month)
+
+    private var months = mapOf<Byte, ArrayList<String>>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        months = (arguments?.getByteArray(MONTH_NUMBERS_ARGUMENT_NAME)
+            ?: throw IllegalArgumentException("$MONTH_NUMBERS_ARGUMENT_NAME not found in arguments")).map {
+            it to (arguments?.getStringArrayList(it.toString())
+                ?: throw IllegalArgumentException("List of users for month \"$it\" not found in arguments"))
+        }.toMap()
+        usersOfMonthRv.adapter = UsersAdapter(months)
+
         var pos = 0
         var sizeOfList = 0
         val month = arguments?.getByte(MONTH_ARGUMENT_NAME)
@@ -45,10 +37,6 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
             sizeOfList += it.value.size
             if (it.key - 1 < month) pos += it.value.size
         }
-        binding.rvUsersOfMonth.layoutManager!!.scrollToPosition(sizeOfList - pos)
-    }
-
-    override fun onUserListItemClick(item: String, position: Int) {
-        // nothing
+        usersOfMonthRv.layoutManager!!.scrollToPosition(sizeOfList - pos)
     }
 }

@@ -25,7 +25,6 @@ import java.text.DecimalFormat
 import java.time.Month
 import java.util.*
 
-
 class ShowStarChartFragment : BaseFragment(R.layout.fragment_show_star_chart), ShowStarChartView {
 
     override val presenter: ShowStarChartPresenter by providePresenter()

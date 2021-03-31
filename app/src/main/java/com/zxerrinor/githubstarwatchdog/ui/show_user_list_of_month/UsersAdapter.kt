@@ -1,4 +1,4 @@
-package com.zxerrinor.githubstarwatchdog.adapters
+package com.zxerrinor.githubstarwatchdog.ui.show_user_list_of_month
 
 import android.content.res.Resources
 import android.view.LayoutInflater
@@ -13,8 +13,7 @@ import java.time.Month
 import java.util.*
 
 class UsersAdapter(
-    private val users: Map<Byte, List<String>>,
-    private val onClickListener: OnUserItemClickListener
+    private val users: Map<Byte, List<String>>
 ) : RecyclerView.Adapter<UserViewHolder>(), StickyAdapter<UserHeaderHolder> {
 
     private val plainUsers = users.keys.fold(listOf<String>()) { a, elem -> a + users[elem]!! }
@@ -31,7 +30,7 @@ class UsersAdapter(
     override fun getItemCount(): Int = plainUsers.size
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        holder.initialize(plainUsers[position], onClickListener)
+        holder.initialize(plainUsers[position])
     }
 
     override fun getStickyId(position: Int): Long = findMonthForUserInPosition(position).toLong()
@@ -46,7 +45,7 @@ class UsersAdapter(
 
     override fun onBindStickyViewHolder(viewHolder: UserHeaderHolder?, position: Int) {
         if (viewHolder == null) throw IllegalStateException("viewHeader is null")
-        viewHolder.initialize(findMonthForUserInPosition(position), onClickListener)
+        viewHolder.initialize(findMonthForUserInPosition(position))
     }
 
     private fun findMonthForUserInPosition(position: Int): Byte {
@@ -62,11 +61,8 @@ class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         listItemUserTextView.text = text
     }
 
-    fun initialize(item: String, action: OnUserItemClickListener) {
+    fun initialize(item: String) {
         listItemUserTextView.text = item
-        itemView.setOnClickListener {
-            action.onUserListItemClick(item, adapterPosition)
-        }
     }
 }
 
@@ -81,19 +77,12 @@ class UserHeaderHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 else " (${currentTime.year - 1})")
     }
 
-    fun initialize(month: Byte, action: OnUserItemClickListener) {
+    fun initialize(month: Byte) {
         val currentTime = LocalDateTime.now()
         val text = (Month.values()[(month - 1) % 12].name.toLowerCase(Locale.ROOT)
             .capitalize(Locale.ROOT) +
                 if (month - 12 > 0) " (${currentTime.year})"
                 else " (${currentTime.year - 1})")
         listItemUserTextView.text = text
-        itemView.setOnClickListener {
-            action.onUserListItemClick(text, adapterPosition)
-        }
     }
-}
-
-interface OnUserItemClickListener {
-    fun onUserListItemClick(item: String, position: Int)
 }
