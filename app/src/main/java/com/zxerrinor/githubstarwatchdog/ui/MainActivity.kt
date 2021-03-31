@@ -6,8 +6,9 @@ import android.view.MenuItem
 import com.omegar.mvp.MvpAppCompatActivity
 import com.zxerrinor.githubstarwatchdog.R
 import com.zxerrinor.githubstarwatchdog.clearDatabaseCache
+import com.zxerrinor.githubstarwatchdog.ui.base.BaseActivity
 
-class MainActivity : MvpAppCompatActivity() {
+class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
