@@ -1,10 +1,11 @@
-package com.zxerrinor.githubstarwatchdog.ui
+package com.zxerrinor.githubstarwatchdog.ui.base.show_star_chart
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Spinner
 import androidx.navigation.fragment.findNavController
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -13,55 +14,57 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.omega_r.adapters.OmegaSpinnerAdapter
 import com.omega_r.base.components.OmegaFragment
-import com.omegar.mvp.presenter.InjectPresenter
+import com.omegar.mvp.ktx.providePresenter
 import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME
 import com.zxerrinor.githubstarwatchdog.R
-import com.zxerrinor.githubstarwatchdog.databinding.FragmentShowStarChartBinding
-import com.zxerrinor.githubstarwatchdog.presenters.ShowStarChartPresenter
-import com.zxerrinor.githubstarwatchdog.views.ShowStarChartView
 import java.text.DecimalFormat
 import java.time.Month
 import java.util.*
 
 
-class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
-    private var _binding: FragmentShowStarChartBinding? = null
-    private val binding get() = _binding!!
+class ShowStarChartFragment : OmegaFragment(R.layout.fragment_show_star_chart), ShowStarChartView {
 
-    @InjectPresenter
-    override lateinit var presenter: ShowStarChartPresenter
+    override val presenter: ShowStarChartPresenter by providePresenter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentShowStarChartBinding.inflate(inflater, container, false)
-        return binding.root
+    private val starsPerMonthChart: BarChart by bind(R.id.chart_stars_per_month)
+    private val currentRepoIsFavouriteSwitch: SwitchMaterial by bind(R.id.switch_current_repo_is_favourite)
+    private val monthSpinner: Spinner by bind(R.id.spinner_month) {
+        adapter = monthSpinnerAdapter
     }
+    private val monthSpinnerAdapter: OmegaSpinnerAdapter.StringAdapter by bind(init = {
+        return@bind OmegaSpinnerAdapter.StringAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+    })
+    private val showMonthButton: Button by bind(R.id.button_show_month)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.switchCurrentRepoIsFavourite.setOnClickListener {
+        currentRepoIsFavouriteSwitch.setOnClickListener {
             presenter.onCurrentRepoFavouriteSwitchClicked()
         }
 
-        binding.buttonShowMonth.setOnClickListener {
-            presenter.onShowMonthButtonClicked(binding.inputMonth.selectedItem.toString())
+        showMonthButton.setOnClickListener {
+            presenter.onShowMonthButtonClicked(monthSpinner.selectedItem.toString())
         }
     }
 
     override fun setIsFavouriteSwitchState(state: Boolean) {
         val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
         activity.runOnUiThread {
-            binding.switchCurrentRepoIsFavourite.isChecked = state
+            currentRepoIsFavouriteSwitch.isChecked = state
         }
     }
 
     override fun setChartEntries(entries: List<BarEntry>, label: String, start: Int) {
-        val chart = binding.chartStarsPerMonth
+        val chart = starsPerMonthChart
         chart.setScaleEnabled(false)
         chart.setPinchZoom(false)
 
@@ -70,7 +73,6 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
                 if (e != null) {
                     val bundle = Bundle()
                     bundle.putByte(MONTH_ARGUMENT_NAME, e.x.toInt().toByte())
-//                    CurrentValuesStore.month = e.x.toInt()
                     findNavController().navigate(
                         R.id.action_ShowStarChartFragment_to_ShowUserListOfMonthFragment,
                         bundle
@@ -95,23 +97,11 @@ class ShowStarChartFragment : OmegaFragment(), ShowStarChartView {
         chart.invalidate()
     }
 
-    override fun setMonthInputAdapter(monthList: List<String>) {
+    override fun setMonthSpinnerContent(monthList: List<String>) {
         val activity = activity ?: throw IllegalStateException("Fragment must be in activity")
-        val monthInputAdapter = OmegaSpinnerAdapter.StringAdapter(
-            activity,
-            android.R.layout.simple_spinner_item,
-            monthList
-        )
-        monthInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         activity.runOnUiThread {
-            binding.inputMonth.adapter = monthInputAdapter
-            monthInputAdapter.notifyDataSetChanged()
+            monthSpinnerAdapter.list = monthList
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     class CustomValueFormatter(

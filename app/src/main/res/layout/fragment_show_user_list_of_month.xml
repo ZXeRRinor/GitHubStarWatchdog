@@ -5,10 +5,10 @@
     android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ShowUserListOfMonthFragment">
+    tools:context=".ui.show_user_list_of_month.ShowUserListOfMonthFragment">
 
     <com.omega_r.libs.omegarecyclerview.OmegaRecyclerView
-        android:id="@+id/usersOfMonthRV"
+        android:id="@+id/rv_users_of_month"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

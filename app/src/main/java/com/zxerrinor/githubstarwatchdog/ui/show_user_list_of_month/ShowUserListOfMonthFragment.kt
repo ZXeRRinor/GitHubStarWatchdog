@@ -1,11 +1,10 @@
-package com.zxerrinor.githubstarwatchdog.ui
+package com.zxerrinor.githubstarwatchdog.ui.show_user_list_of_month
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.zxerrinor.githubstarwatchdog.MONTH_ARGUMENT_NAME
 import com.zxerrinor.githubstarwatchdog.MONTH_NUMBERS_ARGUMENT_NAME
 import com.zxerrinor.githubstarwatchdog.adapters.OnUserItemClickListener
@@ -32,7 +31,7 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
             months,
             this
         )
-        binding.usersOfMonthRV.adapter = usersAdapter
+        binding.rvUsersOfMonth.adapter = usersAdapter
         return binding.root
     }
 
@@ -46,7 +45,7 @@ class ShowUserListOfMonthFragment : Fragment(), OnUserItemClickListener {
             sizeOfList += it.value.size
             if (it.key - 1 < month) pos += it.value.size
         }
-        binding.usersOfMonthRV.layoutManager!!.scrollToPosition(sizeOfList - pos)
+        binding.rvUsersOfMonth.layoutManager!!.scrollToPosition(sizeOfList - pos)
     }
 
     override fun onUserListItemClick(item: String, position: Int) {

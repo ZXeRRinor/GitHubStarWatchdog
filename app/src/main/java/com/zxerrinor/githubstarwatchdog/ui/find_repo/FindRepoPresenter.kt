@@ -1,15 +1,11 @@
-package com.zxerrinor.githubstarwatchdog.presenters
+package com.zxerrinor.githubstarwatchdog.ui.find_repo
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.omega_r.base.mvp.presenters.OmegaPresenter
-import com.omega_r.libs.omegatypes.Text
 import com.omega_r.libs.omegatypes.toText
 import com.zxerrinor.githubstarwatchdog.*
 import com.zxerrinor.githubstarwatchdog.githubapi.Repository
-import com.zxerrinor.githubstarwatchdog.ui.FindRepoFragment
-import com.zxerrinor.githubstarwatchdog.views.FindRepoView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.zxerrinor.githubstarwatchdog.database.Repository as RepositoryRecord
@@ -55,8 +51,8 @@ class FindRepoPresenter : OmegaPresenter<FindRepoView>() {
 
     fun onFindRepoButtonClicked(repoUserName: String) {
         GlobalScope.launch {
-            viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName, true))
-            viewState.setRepoInputAdapter(getRepositoriesOfUser(repoUserName))
+            viewState.setRepoSpinnerContent(getRepositoriesOfUser(repoUserName, true))
+            viewState.setRepoSpinnerContent(getRepositoriesOfUser(repoUserName))
         }
     }
 

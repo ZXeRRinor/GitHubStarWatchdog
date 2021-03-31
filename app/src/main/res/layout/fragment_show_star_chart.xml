@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ShowStarChartFragment">
+    tools:context=".ui.base.show_star_chart.ShowStarChartFragment">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart_stars_per_month"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/chart_stars_per_month" />
 
     <Spinner
-        android:id="@+id/input_month"
+        android:id="@+id/spinner_month"
         android:layout_width="370dp"
         android:layout_height="25dp"
         android:layout_marginTop="4dp"
@@ -58,6 +58,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.908"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_month" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_month" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,15 @@ repositories {
 
 android {
     packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude ("META-INF/*.kotlin_module")
         exclude "META-INF/metadata.jvm.kotlin_module"
         exclude "META-INF/metadata.kotlin_module"
         exclude "META-INF/util.runtime.kotlin_module"
@@ -22,7 +31,7 @@ android {
     }
 
     compileSdkVersion 29
-    buildToolsVersion "30.0.1"
+    buildToolsVersion "30.0.3"
 
     buildFeatures {
         viewBinding true

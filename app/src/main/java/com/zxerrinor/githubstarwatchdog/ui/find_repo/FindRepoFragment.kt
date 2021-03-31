@@ -1,4 +1,4 @@
-package com.zxerrinor.githubstarwatchdog.ui
+package com.zxerrinor.githubstarwatchdog.ui.find_repo
 
 import android.os.Bundle
 import android.widget.*
@@ -8,8 +8,6 @@ import com.omega_r.adapters.OmegaSpinnerAdapter
 import com.omega_r.base.components.OmegaFragment
 import com.omegar.mvp.ktx.providePresenter
 import com.zxerrinor.githubstarwatchdog.R
-import com.zxerrinor.githubstarwatchdog.presenters.FindRepoPresenter
-import com.zxerrinor.githubstarwatchdog.views.FindRepoView
 
 class FindRepoFragment : OmegaFragment(R.layout.fragment_find_repo), FindRepoView {
 
@@ -20,8 +18,8 @@ class FindRepoFragment : OmegaFragment(R.layout.fragment_find_repo), FindRepoVie
     }
     private val userNameEditText: EditText by bind(R.id.input_username)
     private val hideNotLoadedSwitch: SwitchMaterial by bind(R.id.switch_hide_not_loaded)
-    private val repoInputAdapter: OmegaSpinnerAdapter.StringAdapter by bind( init = {
-         return@bind OmegaSpinnerAdapter.StringAdapter(
+    private val repoInputAdapter: OmegaSpinnerAdapter.StringAdapter by bind(init = {
+        return@bind OmegaSpinnerAdapter.StringAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item
         ).also {
@@ -40,8 +38,8 @@ class FindRepoFragment : OmegaFragment(R.layout.fragment_find_repo), FindRepoVie
         }
     }
 
-    override fun setRepoInputAdapter(repoList: List<String>) {
-        repoInputAdapter.list = repoList
+    override fun setRepoSpinnerContent(repoList: List<String>) {
+        activity?.runOnUiThread { repoInputAdapter.list = repoList }
     }
 
     override fun setHideNotLoadedSwitchVisibility(visible: Boolean) {

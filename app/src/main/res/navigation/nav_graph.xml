@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FindRepoFragment"
-        android:name="com.zxerrinor.githubstarwatchdog.ui.FindRepoFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.find_repo.FindRepoFragment"
         android:label="@string/label_find_repo_fragment"
         tools:layout="@layout/fragment_find_repo">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/ShowStarChartFragment"
-        android:name="com.zxerrinor.githubstarwatchdog.ui.ShowStarChartFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.base.show_star_chart.ShowStarChartFragment"
         android:label="@string/label_show_star_chart_fragment_label"
         tools:layout="@layout/fragment_show_star_chart">
 
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/ShowUserListOfMonthFragment"
-        android:name="com.zxerrinor.githubstarwatchdog.ui.ShowUserListOfMonthFragment"
+        android:name="com.zxerrinor.githubstarwatchdog.ui.show_user_list_of_month.ShowUserListOfMonthFragment"
         android:label="@string/label_show_user_list_of_month_fragment"
         tools:layout="@layout/fragment_show_user_list_of_month" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.zxerrinor.githubstarwatchdog.presenters
+package com.zxerrinor.githubstarwatchdog.ui.base.show_star_chart
 
 import android.app.Activity
 import android.os.Bundle
@@ -11,8 +11,6 @@ import com.zxerrinor.githubstarwatchdog.*
 import com.zxerrinor.githubstarwatchdog.database.Repository
 import com.zxerrinor.githubstarwatchdog.database.Star
 import com.zxerrinor.githubstarwatchdog.githubapi.Stargazer
-import com.zxerrinor.githubstarwatchdog.ui.ShowStarChartFragment
-import com.zxerrinor.githubstarwatchdog.views.ShowStarChartView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -204,7 +202,7 @@ class ShowStarChartPresenter : OmegaPresenter<ShowStarChartView>() {
                     if (it.key - 12 > 0) " (${currentTime.year})"
                     else " (${currentTime.year - 1})") to it.key
         }.toMap()
-        viewState.setMonthInputAdapter(monthList.map { it.key })
+        viewState.setMonthSpinnerContent(monthList.map { it.key })
     }
 
     fun onShowMonthButtonClicked(monthInput: String) {
