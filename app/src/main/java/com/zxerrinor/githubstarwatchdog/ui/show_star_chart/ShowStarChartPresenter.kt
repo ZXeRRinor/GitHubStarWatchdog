@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.github.mikephil.charting.data.BarEntry
-import com.omega_r.base.mvp.presenters.OmegaPresenter
 import com.omega_r.libs.extensions.list.toArrayList
 import com.zxerrinor.githubstarwatchdog.*
-import com.zxerrinor.githubstarwatchdog.database.Repository
-import com.zxerrinor.githubstarwatchdog.database.Star
-import com.zxerrinor.githubstarwatchdog.githubapi.Stargazer
+import com.zxerrinor.datarepository.database.Repository
+import com.zxerrinor.datarepository.database.Star
+import com.zxerrinor.datarepository.githubapi.Stargazer
 import com.zxerrinor.githubstarwatchdog.ui.base.BasePresenter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

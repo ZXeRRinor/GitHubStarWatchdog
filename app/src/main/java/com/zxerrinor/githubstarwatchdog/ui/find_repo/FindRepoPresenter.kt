@@ -2,14 +2,13 @@ package com.zxerrinor.githubstarwatchdog.ui.find_repo
 
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.omega_r.base.mvp.presenters.OmegaPresenter
 import com.omega_r.libs.omegatypes.toText
 import com.zxerrinor.githubstarwatchdog.*
-import com.zxerrinor.githubstarwatchdog.githubapi.Repository
+import com.zxerrinor.datarepository.githubapi.Repository
 import com.zxerrinor.githubstarwatchdog.ui.base.BasePresenter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.zxerrinor.githubstarwatchdog.database.Repository as RepositoryRecord
+import com.zxerrinor.datarepository.database.Repository as RepositoryRecord
 
 class FindRepoPresenter : BasePresenter<FindRepoView>() {
 

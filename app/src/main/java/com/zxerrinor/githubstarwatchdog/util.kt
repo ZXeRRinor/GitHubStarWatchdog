@@ -2,7 +2,7 @@ package com.zxerrinor.githubstarwatchdog
 
 import android.widget.Toast
 import com.omegar.mvp.MvpAppCompatActivity
-import com.zxerrinor.githubstarwatchdog.database.Star
+import com.zxerrinor.datarepository.database.Star
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.net.InetAddress
