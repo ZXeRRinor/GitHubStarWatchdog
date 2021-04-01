@@ -1,2 +1,3 @@
+include ':DataRepository'
 include ':app'
 rootProject.name = "GithubStarWatchdog"
